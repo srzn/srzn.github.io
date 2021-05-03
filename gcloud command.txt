@@ -1,0 +1,1 @@
+gcloud compute ssh --zone "us-east1-b" "dl4hc-vm"  --project "eternal-ship-311718" -- -L 2121:localhost:8080
