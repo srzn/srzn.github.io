@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v6.js"></script>
+
+
+<!-- Create an element where the map will take place -->
+<svg id="my_dataviz" width="900" height="600"></svg>
+
+<script>
+queue()
+.defer(d3.csv, "US_Mobility.csv")
+.defer(d3.csv, "Covid-US-Dec-14.csv")
+.await(makeChart);//here you are calling the function makeChart
+
+   function makeChart(error, data1, data2) {//first param is error and not data
+      console.log(data1);//workbook1
+      console.log(data2);//workbook2
+      console.log("everything ran");
+     }; 
+</script>
+
+
+
