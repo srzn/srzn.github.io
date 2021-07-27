@@ -3,7 +3,7 @@
 <head>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body{ font: Arial 12px; text-align: center;}
+body{ font-family: 'Trebuchet MS', sans-serif; text-align: center;}
 .axis path, .axis line{
 fill: none;
 stroke: black;
@@ -13,8 +13,9 @@ shape-rendering: crispEdges;
 </style>
 </head>
 <body>
-<h3>Covid-19 Trend(s) in the US</h3>
-</body>
+<h3>Recent Covid-19 Trend(s) in the US</h3>
+
+<select id="selectButton"></select>
 <div id="my_dataviz"></div>
 <script>
 //Set margins and sizes
@@ -55,15 +56,36 @@ myDataPromises.then(function(data) {
 
 //Parse Data into useable format
 data=data[0];
-console.log(data);
+//console.log(data);
 data.forEach(function(d){
 d.date = ParseDate(d.date);
 //console.log(d.date);
 d.new_cases = +d.new_cases_smoothed_per_million;
 //console.log(d.new_cases);
 d.new_vax = (+d.people_fully_vaccinated_per_hundred)*10;
+
+d.tot_cases = +d.total_cases
+
+d.full_vax = +d.people_fully_vaccinated
+
 //the + sign converts string automagically to number
 });
+
+
+// Drop down
+
+var cases_sel = ["New Cases per million","Total Cases"];
+let allGroup = Array.from(cases_sel);
+
+
+d3.select("#selectButton")
+    .selectAll('myOptions')
+    .data(allGroup)
+    .enter()
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function (d,i) { return i; })
+
 
 //Create x and y scale to scale inputs
 var xScale = d3.scaleTime()
@@ -73,10 +95,16 @@ var yScale = d3.scaleLinear()
              .domain([0, d3.max(data, function(d){ return d.new_cases; })]).nice()
              .range([height, 0]);
 
+var yScale1 = d3.scaleLinear()
+             .domain([1, d3.max(data, function(d){ return d.tot_cases; })]).nice()
+             .range([height, 0]);
+
 //Create x and y axes
 var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
 
 var yAxis = d3.axisLeft(yScale).ticks(null,"s");
+
+
 
 //Set the domains of our scales
 //xScale.domain(d3.extent(data, function(d){ return d.date; }));
@@ -188,6 +216,107 @@ var y = svgElement.append("g")
 
 //Add label to Y axis
 
+
+
+
+function updateChart(selectedGroup) {
+console.log(selectedGroup);
+    // recompute line chart
+if (selectedGroup==0){
+
+var valueline1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale(d.new_cases); });  
+
+var valueline_vax1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale(d.new_vax); });
+
+var yAxis1 = d3.axisLeft(yScale).ticks(null,"s");
+ 
+}
+else{
+console.log("in the else")
+var valueline1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale1(d.tot_cases); });
+
+var valueline_vax1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale1(d.full_vax); });
+
+var yAxis1 = d3.axisLeft(yScale1).ticks(null,"s");
+
+}
+  
+
+
+    // update the chart
+svgElement.selectAll("*").remove();
+
+
+var clip = svgElement.append("clipPath")
+  .attr("id", "clip");
+var clipRect = clip.append("rect")
+  .attr("width", 0)
+  .attr("height", 500);
+
+
+svgElement.append("path")
+.data([data])
+.attr("fill","none")
+.attr("stroke","#ff0000")
+.attr("stroke-width",1.5)
+.attr("d",valueline1)
+.attr("clip-path", "url(#clip)");
+
+
+svgElement.append("path")
+.data([data])
+.attr("fill","none")
+.attr("stroke","#69b3a2")
+.attr("stroke-width",1.5)
+.attr("d",valueline_vax1)
+.attr("clip-path", "url(#clip)");
+
+clipRect.transition()
+  .duration(4300)
+  .ease(d3.easeLinear)
+  .attr("width", 700);
+
+
+//Add X Axis
+svgElement.append("g")
+.attr("transform", "translate(0,"+height+")")
+.call(xAxis);
+
+//Add Y Axis
+var y = svgElement.append("g")
+.call(yAxis1)
+.append("text")
+    .attr("fill", "#000")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -48)
+    .attr("x",0)
+    .attr("dy", "0.9em")
+    .attr("text-anchor", "end")
+    .text("Number of Cases/Vaccinations");
+
+//Add label to Y axis
+
+
+
+}
+
+  // Listen to the slider?
+  d3.select("#selectButton").on("change", function(d){
+    selectedGroup = this.value
+    updateChart(selectedGroup)
+  })
+
+
+
+
 });
 
 myDataPromises.catch(function() {
@@ -197,5 +326,5 @@ myDataPromises.catch(function() {
 
 
 </script>
-
+</body>
 </html>
