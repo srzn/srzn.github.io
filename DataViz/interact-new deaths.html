@@ -59,9 +59,9 @@ console.log(data);
 data.forEach(function(d){
 d.date = ParseDate(d.date);
 //console.log(d.date);
-d.new_cases = +d.new_cases_smoothed_per_million;
+d.new_cases = +d.new_deaths_smoothed_per_million;
 //console.log(d.new_cases);
-d.new_vax = (+d.people_fully_vaccinated_per_hundred)*10;
+d.new_vax = (+d.people_fully_vaccinated_per_hundred);
 //the + sign converts string automagically to number
 });
 
@@ -70,7 +70,7 @@ var xScale = d3.scaleTime()
              .domain(d3.extent(data, function(d){ return d.date; }))
              .range([0, width]);
 var yScale = d3.scaleLinear()
-             .domain([0, d3.max(data, function(d){ return d.new_cases; })]).nice()
+             .domain([0, d3.max(data, function(d){ return d.new_vax; })]).nice()
              .range([height, 0]);
 
 //Create x and y axes
@@ -116,6 +116,11 @@ var valueline = d3.line()
     .y(function(d) { return yScale(d.new_cases); });
 
 
+var valueline_vax = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale(d.new_vax); });
+
+
 var clip = svgElement.append("clipPath")
   .attr("id", "clip");
 var clipRect = clip.append("rect")
@@ -127,20 +132,19 @@ var clipRect = clip.append("rect")
 //append the svg path
 svgElement.append("path")
 .data([data])
-.attr("fill","#cce5df")
-.attr("stroke","#69b3a2")
+.attr("fill","none")
+.attr("stroke","#ff0000")
 .attr("stroke-width",1.5)
-.attr("d",area)
+.attr("d",valueline)
 .attr("clip-path", "url(#clip)");
 
 
 svgElement.append("path")
 .data([data])
-.attr("fill","#10e5df")
+.attr("fill","none")
 .attr("stroke","#69b3a2")
 .attr("stroke-width",1.5)
-.attr("fill-opacity","0.5")
-.attr("d",area_vax)
+.attr("d",valueline_vax)
 .attr("clip-path", "url(#clip)");
 
 clipRect.transition()
@@ -180,7 +184,7 @@ var y = svgElement.append("g")
     .attr("x",0)
     .attr("dy", "0.9em")
     .attr("text-anchor", "end")
-    .text("Number of Cases/Vaccinations");
+    .text("Number of Deaths/Vaccinations");
 
 //Add label to Y axis
 
