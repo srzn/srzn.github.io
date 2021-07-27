@@ -70,7 +70,7 @@ var xScale = d3.scaleTime()
              .domain(d3.extent(data, function(d){ return d.date; }))
              .range([0, width]);
 var yScale = d3.scaleLinear()
-             .domain([0, d3.max(data, function(d){ return d.new_cases; })]).nice()
+             .domain([0, d3.max(data, function(d){ return d.new_vax; })]).nice()
              .range([height, 0]);
 
 //Create x and y axes
