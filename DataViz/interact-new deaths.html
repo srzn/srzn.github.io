@@ -59,7 +59,7 @@ console.log(data);
 data.forEach(function(d){
 d.date = ParseDate(d.date);
 //console.log(d.date);
-d.new_cases = +d.new_deaths_smoothed_per_million;
+d.new_cases = (+d.new_deaths_smoothed_per_million);
 //console.log(d.new_cases);
 d.new_vax = (+d.people_fully_vaccinated_per_hundred);
 //the + sign converts string automagically to number
