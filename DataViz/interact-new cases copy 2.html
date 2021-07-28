@@ -534,14 +534,13 @@ data=data[0];
 data.forEach(function(d){
 d.date = ParseDate(d.date);
 console.log(d.date);
-d.new_cases = +d.hosp_patients_per_million;
+d.new_cases = +d.new_cases_smoothed_per_million;
 console.log(d.new_cases);
 d.new_vax = (+d.people_fully_vaccinated_per_hundred);
 
-d.tot_cases = +d.weekly_hosp_admissions_per_million;
+d.tot_cases = +d.total_cases
 console.log(d.tot_cases);
-
-d.icu_cases = +d.icu_patients_per_million;
+d.full_vax = +d.people_fully_vaccinated
 
 //the + sign converts string automagically to number
 });
@@ -549,7 +548,7 @@ d.icu_cases = +d.icu_patients_per_million;
 
 // Drop down
 
-var cases_sel = ["Hospitalization per million","New Weekly Hospitalizations per million","ICU Patients per million"];
+var cases_sel = ["New Cases per million","Total Cases"];
 let allGroup = Array.from(cases_sel);
 
 
@@ -572,7 +571,7 @@ var yScale = d3.scaleLinear()
              .range([height, 0]);
 
 var yScale_tot = d3.scaleLinear()
-             .domain([0, d3.max(data, function(d){ return Math.max(d.icu_cases); })]).nice()
+             .domain([0, d3.max(data, function(d){ return Math.max(d.tot_cases); })]).nice()
              .range([height, 0]);
 
 
@@ -729,39 +728,23 @@ var valueline_vax1 = d3.line()
     .x(function(d) { return xScale(d.date); })
     .y(function(d) { return yScale1(d.new_vax); });
 
-var y_l="New Cases per million";
+var y_l="Number of New Cases per million";
 var yAxis_temp=yAxis;
 var y_val=-48;
 
  
 }
-else if(selectedGroup==1){
-
-var valueline1 = d3.line()
-    .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.tot_cases); });  
-
-var valueline_vax1 = d3.line()
-    .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale1(d.new_vax); });
-
-var y_l="New Weekly Hospitalizations per million";
-var yAxis_temp=yAxis;
-var y_val=-48;
-
-
-}
 else{
 console.log("in the else")
 var valueline1 = d3.line()
     .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale_tot(d.icu_cases); });
+    .y(function(d) { return yScale_tot(d.tot_cases); });
 
 var valueline_vax1 = d3.line()
     .x(function(d) { return xScale(d.date); })
     .y(function(d) { return yScale1(d.new_vax); });
 
-var y_l="ICU patients per million";
+var y_l="Total Number of cases";
 var yAxis_temp=yAxis_tot;
 var y_val=-49;
 }
