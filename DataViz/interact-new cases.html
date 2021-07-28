@@ -533,13 +533,13 @@ data=data[0];
 //console.log(data);
 data.forEach(function(d){
 d.date = ParseDate(d.date);
-//console.log(d.date);
+console.log(d.date);
 d.new_cases = +d.new_cases_smoothed_per_million;
-//console.log(d.new_cases);
+console.log(d.new_cases);
 d.new_vax = (+d.people_fully_vaccinated_per_hundred);
 
 d.tot_cases = +d.total_cases
-
+console.log(d.tot_cases);
 d.full_vax = +d.people_fully_vaccinated
 
 //the + sign converts string automagically to number
@@ -726,7 +726,7 @@ var valueline1 = d3.line()
 
 var valueline_vax1 = d3.line()
     .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.new_vax); });
+    .y(function(d) { return yScale1(d.new_vax); });
 
 var y_l="Number of New Cases per million";
 var yAxis_temp=yAxis;

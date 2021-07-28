@@ -2,21 +2,266 @@
 <html>
 <head>
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 <style>
-body{ font: Arial 12px; text-align: center;}
+body{ font-family: 'Trebuchet MS', sans-serif; text-align: center;}
+.annotation text {
+      
+      font-size: 10px;
+    }
 .axis path, .axis line{
 fill: none;
 stroke: black;
 stroke-width: 1;
 shape-rendering: crispEdges;
 }
+
+.axisRed line{
+  stroke: red;
+}
+
+.axisRed path{
+  stroke: red;
+}
+
+.axisRed text{
+  fill: red;
+  font-size: 13px;
+} 
+
+.axisGreen line{
+  stroke: #69b3a2;
+}
+
+.axisGreen path{
+  stroke: #69b3a2;
+}
+
+.axisGreen text{
+  fill: #69b3a2;
+  font-size: 13px;
+} 
+
+
+#selectButton {
+  width: 190px;
+  font-family: Trebuchet MS;
+  font-size: 12px;
+  
+  height: 20px;
+  
+  /* padding: 100px; */
+}
+
+
+
 </style>
 </head>
 <body>
-<h3>Covid-19 Trend(s) in the US</h3>
-</body>
-<div id="my_dataviz"></div>
+<h3>Recent Covid-19 Trend(s) in the US</h3>
+
+<div style="width:1440px">
+  <svg width="250" height="40" id="sp1" ></svg>
+  <svg width="100" height="40" id="sp2" ></svg>
+  <svg width="750" height="40" id="sp3"></svg>
+</div>
+
+
+<div style="width:1440px">
+  <svg width="450" height="100" id="pages" ></svg>
+  
+  <svg width="650" height="100" id="my_dataviz_dummy"></svg>
+</div>
+<select id="selectButton"></select>
+<div style="width:1440px">
+  <svg width="250" height="500" id="sp_page" ></svg>
+  <svg width="100" height="500" id="sp_spake" ></svg>
+  <svg width="750" height="500" id="my_dataviz"></svg>
+</div>
 <script>
+
+// Pages 
+
+var width_b = 450;
+var height_b = 100;
+var word1 = "1";
+var word2 = "2";
+var word3 = "3";
+var word4 = "4";
+ 
+var holder = d3.select("#pages")
+      .append("svg")
+      .attr("width", width_b)    
+      .attr("height", height_b); 
+
+holder.append("text")
+    .attr("x", 30)
+    .attr("y", 10)
+    .style("fill", "black")
+    .style("font-size", "15px")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text("Pages");
+
+holder.append("text")
+    .attr("x", 30)
+    .attr("y", 50)
+    .style("fill", "black")
+    .style("font-size", "12px")
+    .attr("dx","8.6em")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text("The chart on the right shows new covid-19 cases")
+
+holder.append("text")
+    .attr("x", 30)
+    .attr("y", 63)
+    .style("fill", "black")
+    .style("font-size", "12px")
+    .attr("dx","8.4em")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text("recorded per day interspersed with cumulative")
+
+
+holder.append("text")
+    .attr("x", 30)
+    .attr("y", 76)
+    .style("fill", "black")
+    .style("font-size", "12px")
+    .attr("dx","8.9em")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text("vaccination rate. A rough correlation can be seen")
+
+holder.append("text")
+    .attr("x", 30)
+    .attr("y", 89)
+    .style("fill", "black")
+    .style("font-size", "12px")
+    .attr("dx","5.6em")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text("between the displayed line graphs")
+     
+// 
+
+
+// draw a rectangle
+holder.append("a")
+    .attr("xlink:href", "https://srzn.github.io/DataViz/interact-new%20cases.html")
+    .append("rect")  
+    .attr("x", 60)
+    .attr("y", 0)
+    .attr("height", 20)
+    .attr("width", 20)
+    .attr("rx",4)
+    .attr("ry",4)
+    .style("fill","lightgrey")
+    ;
+
+// draw text on the screen
+holder.append("text")
+    .attr("x", 70)
+    .attr("y", 10)
+    .style("fill", "black")
+    .style("font-size", "10px")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(word1);
+
+// Page 2
+
+holder.append("a")
+    .attr("xlink:href", "https://srzn.github.io/DataViz/interact-new%20hosp.html")
+    .append("rect")  
+    .attr("x", 85)
+    .attr("y", 0)
+    .attr("height", 20)
+    .attr("width", 20)
+    .attr("rx",4)
+    .attr("ry",4)
+    .style("fill", "lightgrey")
+    ;
+
+// draw text on the screen
+holder.append("text")
+    .attr("x", 95)
+    .attr("y", 10)
+    .style("fill", "black")
+    .style("font-size", "10px")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(word2);
+
+
+
+// Page 3
+
+holder.append("a")
+    .attr("xlink:href", "https://srzn.github.io/DataViz/interact-new%20deaths.html")
+    .append("rect")  
+    .attr("x", 110)
+    .attr("y", 0)
+    .attr("height", 20)
+    .attr("width", 20)
+    .attr("rx",4)
+    .attr("ry",4)
+    .style("fill", "lightgrey")
+    ;
+
+// draw text on the screen
+holder.append("text")
+    .attr("x", 120)
+    .attr("y", 10)
+    .style("fill", "black")
+    .style("font-size", "10px")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(word3);
+
+
+
+
+// Page 4 
+
+
+holder.append("a")
+    .attr("xlink:href", "https://srzn.github.io/DataViz/interact-new%20hosp.html")
+    .append("rect")  
+    .attr("x", 135)
+    .attr("y", 0)
+    .attr("height", 20)
+    .attr("width", 20)
+    .attr("rx",4)
+    .attr("ry",4)
+    .style("fill", "lightgrey")
+    ;
+
+// draw text on the screen
+holder.append("text")
+    .attr("x", 145)
+    .attr("y", 10)
+    .style("fill", "black")
+    .style("font-size", "10px")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(word4);
+
+
+
+
+
+
 //Set margins and sizes
 var margin = {
 top: 20,
@@ -24,8 +269,9 @@ bottom: 50,
 right: 30,
 left: 50
 };
-
+ 
 var width = 700 - margin.left - margin.right;
+
 var height = 500 - margin.top - margin.bottom;
 //Create date parser
 var ParseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ");
@@ -35,11 +281,240 @@ var ParseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ");
 
 //Create an SVG element and append it to the DOM
 var svgElement = d3.select("#my_dataviz").append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width + margin.left + margin.right+50)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+
+function mkannot1(svgElement){
+// ------ Annotations 1 --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight = [
+  {
+    note: {
+      label: "First COVID-19 vaccine administered",
+      title: "December 14, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 1,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 0,
+    y: 430,
+    dy: -40,
+    dx: 5
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight = d3.annotation().annotations(annotationsRight);
+svgElement
+  .append("g")
+.attr('class', 'annotation-group')
+  .call(makeAnnotationsRight)
+;
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+
+// ------ Annotations 1 -------- //
+
+}
+
+function mkannot2(svgElement){
+// ------ Annotations 2 --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight2 = [
+  {
+    note: {
+      label: "US surpasses 25 million cases",
+      title: "January 22, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 50,
+    y: 430,
+    dy: -100,
+    dx: 30
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight2 = d3.annotation().annotations(annotationsRight2);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight2);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 2 -------- //
+
+}
+function mkannot3(svgElement){
+
+// ------ Annotations 3 --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight3 = [
+  {
+    note: {
+      label: "First few cases of Delta variant found in the US",
+      title: "April 12, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 268,
+    y: 430,
+    dy: -200,
+    dx: -5
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight3 = d3.annotation().annotations(annotationsRight3);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight3);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 3 -------- //
+
+}
+
+function mkannot4(svgElement){
+
+
+// ------ Annotations 4 --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight4 = [
+  {
+    note: {
+      label: "CDC lifts mask mandates for fully vaccinated people",
+      title: "May 13, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 353,
+    y: 430,
+    dy: -150,
+    dx: 10
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight4 = d3.annotation().annotations(annotationsRight4);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight4);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 4 -------- //
+
+
+
+}
+function mkannot5(svgElement){
+
+// ------ Annotations 5 --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight5 = [
+  {
+    note: {
+      label: "An estimated 83% of All new cases are of Delta variant",
+      title: "July 20, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 553,
+    y: 430,
+    dy: -270,
+    dx: -5
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight5 = d3.annotation().annotations(annotationsRight5);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight5);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 5 -------- //
+
+
+
+
+
+}
 
 //Read CSV file
 
@@ -55,28 +530,66 @@ myDataPromises.then(function(data) {
 
 //Parse Data into useable format
 data=data[0];
-console.log(data);
+//console.log(data);
 data.forEach(function(d){
 d.date = ParseDate(d.date);
-//console.log(d.date);
-d.new_cases = (+d.new_deaths_smoothed_per_million);
-//console.log(d.new_cases);
+console.log(d.date);
+d.new_cases = +d.new_deaths_smoothed_per_million;
+
 d.new_vax = (+d.people_fully_vaccinated_per_hundred);
+console.log(d.new_vax);
+d.tot_cases = +d.total_deaths
+
+d.full_vax = +d.people_fully_vaccinated
+
 //the + sign converts string automagically to number
 });
+
+
+// Drop down
+
+var cases_sel = ["New Deaths per million","Total Deaths"];
+let allGroup = Array.from(cases_sel);
+
+
+d3.select("#selectButton")
+    .attr("x",100)
+    .selectAll('myOptions')
+    .data(allGroup)
+    .enter()
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function (d,i) { return i; })
+
 
 //Create x and y scale to scale inputs
 var xScale = d3.scaleTime()
              .domain(d3.extent(data, function(d){ return d.date; }))
              .range([0, width]);
 var yScale = d3.scaleLinear()
-             .domain([0, d3.max(data, function(d){ return d.new_vax; })]).nice()
+             .domain([0, d3.max(data, function(d){ return Math.max(d.new_cases); })]).nice()
+             .range([height, 0]);
+
+var yScale_tot = d3.scaleLinear()
+             .domain([0, d3.max(data, function(d){ return Math.max(d.tot_cases); })]).nice()
+             .range([height, 0]);
+
+
+var yScale1 = d3.scaleLinear()
+             .domain([0, d3.max(data, function(d){ return Math.max(d.new_vax); })]).nice()
              .range([height, 0]);
 
 //Create x and y axes
 var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
 
 var yAxis = d3.axisLeft(yScale).ticks(null,"s");
+
+var yAxis1 = d3.axisRight(yScale1).ticks(null,"s");
+
+var yAxis_tot = d3.axisLeft(yScale_tot).ticks(null,"s");
+
+
+
 
 //Set the domains of our scales
 //xScale.domain(d3.extent(data, function(d){ return d.date; }));
@@ -118,7 +631,7 @@ var valueline = d3.line()
 
 var valueline_vax = d3.line()
     .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.new_vax); });
+    .y(function(d) { return yScale1(d.new_vax); });
 
 
 var clip = svgElement.append("clipPath")
@@ -148,19 +661,15 @@ svgElement.append("path")
 .attr("clip-path", "url(#clip)");
 
 clipRect.transition()
-  .duration(4300)
+  .duration(2700)
   .ease(d3.easeLinear)
   .attr("width", 700);
 
-
-
-
-
-
-
-
-
-
+setTimeout(function() { mkannot1(svgElement); }, 50);
+setTimeout(function() { mkannot2(svgElement); }, 300);
+setTimeout(function() { mkannot3(svgElement); }, 1000);
+setTimeout(function() { mkannot4(svgElement); }, 1600);
+setTimeout(function() { mkannot5(svgElement); }, 2400);
 
 
 //svgElement.append("path")
@@ -176,6 +685,7 @@ svgElement.append("g")
 
 //Add Y Axis
 var y = svgElement.append("g")
+.attr("class","axisRed")
 .call(yAxis)
 .append("text")
     .attr("fill", "#000")
@@ -184,9 +694,145 @@ var y = svgElement.append("g")
     .attr("x",0)
     .attr("dy", "0.9em")
     .attr("text-anchor", "end")
-    .text("Number of Deaths/Vaccinations");
+    .text("Number of New Cases per million");
+
+var y1 = svgElement.append("g")
+.attr("class","axisGreen")
+.attr("transform", "translate( " + width + ", 0 )")
+.call(yAxis1)
+.append("text")
+    .attr("fill", "#000")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 36)
+    .attr("x",0)
+    .attr("dy", "0.9em")
+    .attr("text-anchor", "end")
+    .text("Fully vaccinated people per 100");
+
 
 //Add label to Y axis
+
+
+
+
+function updateChart(selectedGroup) {
+console.log(selectedGroup);
+    // recompute line chart
+if (selectedGroup==0){
+
+var valueline1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale(d.new_cases); });  
+
+var valueline_vax1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale1(d.new_vax); });
+
+var y_l="Number of New Cases per million";
+var yAxis_temp=yAxis;
+var y_val=-48;
+
+ 
+}
+else{
+console.log("in the else")
+var valueline1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale_tot(d.tot_cases); });
+
+var valueline_vax1 = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale1(d.new_vax); });
+
+var y_l="Total Number of cases";
+var yAxis_temp=yAxis_tot;
+var y_val=-49;
+}
+  
+
+
+    // update the chart
+svgElement.selectAll("*").remove();
+
+
+var clip = svgElement.append("clipPath")
+  .attr("id", "clip");
+var clipRect = clip.append("rect")
+  .attr("width", 0)
+  .attr("height", 500);
+
+
+svgElement.append("path")
+.data([data])
+.attr("fill","none")
+.attr("stroke","#ff0000")
+.attr("stroke-width",1.5)
+.attr("d",valueline1)
+.attr("clip-path", "url(#clip)");
+
+
+svgElement.append("path")
+.data([data])
+.attr("fill","none")
+.attr("stroke","#69b3a2")
+.attr("stroke-width",1.5)
+.attr("d",valueline_vax1)
+.attr("clip-path", "url(#clip)");
+
+clipRect.transition()
+  .duration(2700)
+  .ease(d3.easeLinear)
+  .attr("width", 700);
+
+setTimeout(function() { mkannot1(svgElement); }, 50);
+setTimeout(function() { mkannot2(svgElement); }, 300);
+setTimeout(function() { mkannot3(svgElement); }, 1000);
+setTimeout(function() { mkannot4(svgElement); }, 1600);
+setTimeout(function() { mkannot5(svgElement); }, 2400);
+//Add X Axis
+svgElement.append("g")
+.attr("transform", "translate(0,"+height+")")
+.call(xAxis);
+
+var y = svgElement.append("g")
+.attr("class","axisRed")
+.call(yAxis_temp)
+.append("text")
+    .attr("fill", "#000")
+    .attr("transform", "rotate(-90)")
+    .attr("y", y_val)
+    .attr("x",0)
+    .attr("dy", "0.9em")
+    .attr("text-anchor", "end")
+    .text(y_l);
+
+
+//Add label to Y axis
+
+var y1 = svgElement.append("g")
+.attr("class","axisGreen")
+.attr("transform", "translate( " + width + ", 0 )")
+.call(yAxis1)
+.append("text")
+    .attr("fill", "#000")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 36)
+    .attr("x",0)
+    .attr("dy", "0.9em")
+    .attr("text-anchor", "end")
+    .text("Fully vaccinated people per 100");
+
+
+}
+
+  // Listen to the slider?
+  d3.select("#selectButton").on("change", function(d){
+    selectedGroup = this.value
+    updateChart(selectedGroup)
+  })
+
+
+
 
 });
 
@@ -197,5 +843,5 @@ myDataPromises.catch(function() {
 
 
 </script>
-
+</body>
 </html>
