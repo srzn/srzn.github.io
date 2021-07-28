@@ -549,7 +549,7 @@ d.icu_cases = +d.icu_patients_per_million;
 
 // Drop down
 
-var cases_sel = ["Hospitalization per million","New Weekly Hospitalizations per million","ICU Patients per million"];
+var cases_sel = ["Hospitalizations per million","New Weekly Hospitalizations per million","ICU Patients per million"];
 let allGroup = Array.from(cases_sel);
 
 
@@ -695,7 +695,7 @@ var y = svgElement.append("g")
     .attr("x",0)
     .attr("dy", "0.9em")
     .attr("text-anchor", "end")
-    .text("Number of New Cases per million");
+    .text("Hospitalizations per million");
 
 var y1 = svgElement.append("g")
 .attr("class","axisGreen")
@@ -729,7 +729,7 @@ var valueline_vax1 = d3.line()
     .x(function(d) { return xScale(d.date); })
     .y(function(d) { return yScale1(d.new_vax); });
 
-var y_l="New Cases per million";
+var y_l="Hospitalizations per million";
 var yAxis_temp=yAxis;
 var y_val=-48;
 
