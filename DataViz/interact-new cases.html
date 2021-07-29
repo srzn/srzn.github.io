@@ -44,13 +44,13 @@ shape-rendering: crispEdges;
 
 
 #selectButton {
-  width: 190px;
+  width: 170px;
   font-family: Trebuchet MS;
   font-size: 12px;
   
   height: 20px;
   
-  /* padding: 100px; */
+  /* padding: 10px; */
 }
 
 
@@ -61,9 +61,9 @@ shape-rendering: crispEdges;
 <h3>Recent Covid-19 Trend(s) in the US</h3>
 
 <div style="width:1440px">
-  <svg width="250" height="40" id="sp1" ></svg>
-  <svg width="100" height="40" id="sp2" ></svg>
-  <svg width="750" height="40" id="sp3"></svg>
+  <svg width="250" height="20" id="sp1" ></svg>
+  <svg width="100" height="20" id="sp2" ></svg>
+  <svg width="750" height="20" id="sp3"></svg>
 </div>
 
 
@@ -354,7 +354,7 @@ const annotationsRight2 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 50,
+    x: 106,
     y: 430,
     dy: -100,
     dx: 30
@@ -397,7 +397,7 @@ const annotationsRight3 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 268,
+    x: 329,
     y: 430,
     dy: -200,
     dx: -5
@@ -442,7 +442,7 @@ const annotationsRight4 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 353,
+    x: 415,
     y: 430,
     dy: -150,
     dx: 10
@@ -487,7 +487,7 @@ const annotationsRight5 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 553,
+    x: 603,
     y: 430,
     dy: -270,
     dx: -5
@@ -580,7 +580,7 @@ var yScale1 = d3.scaleLinear()
              .range([height, 0]);
 
 //Create x and y axes
-var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
+var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %Y"));
 
 var yAxis = d3.axisLeft(yScale).ticks(null,"s");
 
@@ -658,18 +658,21 @@ svgElement.append("path")
 .attr("stroke","#69b3a2")
 .attr("stroke-width",1.5)
 .attr("d",valueline_vax)
-.attr("clip-path", "url(#clip)");
+.attr("clip-path", "url(#clip)")
+
+
+;
 
 clipRect.transition()
-  .duration(2700)
+  .duration(4000)
   .ease(d3.easeLinear)
   .attr("width", 700);
 
-setTimeout(function() { mkannot1(svgElement); }, 50);
-setTimeout(function() { mkannot2(svgElement); }, 300);
-setTimeout(function() { mkannot3(svgElement); }, 1000);
-setTimeout(function() { mkannot4(svgElement); }, 1600);
-setTimeout(function() { mkannot5(svgElement); }, 2400);
+setTimeout(function() { mkannot1(svgElement); }, 100);
+setTimeout(function() { mkannot2(svgElement); }, 900);
+setTimeout(function() { mkannot3(svgElement); }, 2000);
+setTimeout(function() { mkannot4(svgElement); }, 2900);
+setTimeout(function() { mkannot5(svgElement); }, 3700);
 
 
 //svgElement.append("path")
@@ -715,6 +718,232 @@ var y1 = svgElement.append("g")
 
 
 
+
+
+
+
+// ---------- Tool Tip ----------- //
+
+
+function calltooltip(svgElement,data,xScale,yScale1,ysc,tot){
+
+
+var rectOverlay = d3.select("#my_dataviz")
+    .append("rect")
+    .attr("cursor", "move")
+    .attr("fill", "none")
+    .attr("pointer-events", "all")
+    .attr("width", width+50)
+    .attr("height", height)
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .on("mousemove", focusMouseMove)
+    .on("mouseover", focusMouseOver)
+    .on("mouseout", focusMouseOut);
+
+
+
+var mouseLine = svgElement
+    .append("path") // create vertical line to follow mouse
+    .attr("class", "mouse-line")
+    .attr("stroke", "grey")
+    .attr("stroke-width", 1)
+    .attr("opacity", "0");
+
+  var tooltip = svgElement
+    .append("g")
+    .attr("class", "tooltip-wrapper")
+    .attr("display", "none");
+
+  var tooltipBackground = tooltip.append("rect").attr("fill", "#e8e8e8");
+
+  var tooltipText = tooltip.append("text");
+
+
+// ------ ------- //
+
+
+  var dates = [];
+  // group y axis values (value) of all lines to x axis (key)
+  var groupValuesByX = {};
+  var groupValuesByX1 = {};
+ var groupValuesByX_tot ={};
+  for (let key of Object.keys(data)) {
+    //console.log("keys");
+    //console.log(key);
+if(isNaN(key)){
+	console.log("Im inside insane loops")
+	continue;
+}
+    //console.log("data[key]");
+    //console.log(data[key]);
+
+    
+    bucketRecord = data[key];	
+    
+    dates.push(bucketRecord.date);
+	//console.log("bucketrecord date")
+	//console.log((bucketRecord.date))
+    !(bucketRecord.date in groupValuesByX) && (groupValuesByX[bucketRecord.date] = {}); // if date as key does not exist then create
+      groupValuesByX[bucketRecord.date][key] = bucketRecord.new_cases;
+
+!(bucketRecord.date in groupValuesByX1) && (groupValuesByX1[bucketRecord.date] = {}); // if date as key does not exist then create
+      groupValuesByX1[bucketRecord.date][key] = bucketRecord.new_vax;
+    
+
+
+!(bucketRecord.date in groupValuesByX_tot) && (groupValuesByX_tot[bucketRecord.date] = {}); // if date as key does not exist then create
+      groupValuesByX_tot[bucketRecord.date][key] = bucketRecord.tot_cases;
+
+  
+
+
+}
+  var availableDates = Object.keys(groupValuesByX);
+  availableDates.sort(); // sort dates in increasing order
+  //console.log(groupValuesByX);
+  //console.log(availableDates);
+
+// ------ -------- //
+
+
+
+  function focusMouseMove() {
+    tooltip.attr("display", null);
+    var mouse = d3.pointer(event,svgElement.node());
+
+console.log("mouse");
+console.log(mouse);
+
+    var dateOnMouse = xScale.invert(mouse[0]);
+    var nearestDateIndex = d3.bisect(availableDates, dateOnMouse.toString());
+
+console.log("mouse x val");
+console.log(dateOnMouse);
+
+
+console.log("Logged x val");
+console.log(nearestDateIndex);
+    // get the dates on either of the mouse cord
+    var d0 = new Date(availableDates[nearestDateIndex - 1]);
+    var d1 = new Date(availableDates[nearestDateIndex]);
+    var closestDate;
+    if (d0 < xScale.domain()[0]) {
+      closestDate = d1;
+    } else if (d1 > xScale.domain()[1]) {
+      closestDate = d0;
+    } else {
+      // decide which date is closest to the mouse
+      closestDate = dateOnMouse - d0 > d1 - dateOnMouse ? d1 : d0;
+    }
+
+console.log("closest date found");
+console.log(closestDate);
+
+
+    var nearestDateYValues = groupValuesByX[closestDate];
+    var nearestDateYValues_tot = groupValuesByX_tot[closestDate];
+    var nearestDateYValues1 = groupValuesByX1[closestDate];
+    var lab_y = {};
+    if(tot==0){
+	hold_y=nearestDateYValues;
+        lab_y = "New Cases";
+
+}
+else{
+hold_y=nearestDateYValues_tot;
+lab_y = "Total Cases";
+}
+    var nearestDateXCord = xScale(new Date(closestDate));
+
+    mouseLine.attr("d", `M ${nearestDateXCord} 0 V ${height}`).attr("opacity", "1");
+
+    tooltipText.selectAll(".tooltip-text-line").remove();
+    svgElement.selectAll(".tooltip-line-circles").remove();
+    //console.log(xScale.domain());
+    var formatTime = d3.timeFormat("%b %d");
+    tooltipText
+      .append("tspan")
+      .attr("class", "tooltip-text-line")
+      .attr("x", "5")
+      .attr("y", "5")
+      .attr("dy", "11px")
+      .attr("font-weight", "bold")
+      .text(`${formatTime(closestDate)}`);
+
+    for (let key of Object.keys(hold_y)) {
+      svgElement
+        .append("circle")
+        .attr("class", "tooltip-line-circles")
+        .attr("r", 4)
+        .attr("fill", "red")
+        .attr("cx", nearestDateXCord)
+        .attr("cy", ysc(hold_y[key]));
+
+      tooltipText
+        .append("tspan")
+        .attr("class", "tooltip-text-line")
+        .attr("x", "5")
+        .attr("dy", `19px`)
+        .attr("fill", "black")
+        .text(`${lab_y}: ${hold_y[key].toFixed(2)}`);
+    }
+
+for (let key of Object.keys(nearestDateYValues1)) {
+      svgElement
+        .append("circle")
+        .attr("class", "tooltip-line-circles")
+        .attr("r", 4)
+        .attr("fill", "#69b3a2")
+        .attr("cx", nearestDateXCord)
+        .attr("cy", yScale1(nearestDateYValues1[key]));
+
+      tooltipText
+        .append("tspan")
+        .attr("class", "tooltip-text-line")
+        .attr("x", "5")
+        .attr("dy", `19px`)
+        .attr("fill", "black")
+        .text(`% Fully Vaccinated People: ${nearestDateYValues1[key].toFixed(2)}`);
+    }
+
+    var tooltipWidth = tooltipText.node().getBBox().width;
+    var tooltipHeight = tooltipText.node().getBBox().height;
+    var rectOverlayWidth = svgElement.node().getBBox().width;
+    tooltipBackground.attr("width", tooltipWidth + 10).attr("height", tooltipHeight + 10);
+    if (nearestDateXCord + tooltipWidth >= rectOverlayWidth) {
+      tooltip.attr("transform", "translate(" + (nearestDateXCord - tooltipWidth - 20) + "," + mouse[1] + ")");
+    } else {
+      tooltip.attr("transform", "translate(" + (nearestDateXCord + 10) + "," + mouse[1] + ")");
+    }
+  }
+
+  function focusMouseOver() {
+    mouseLine.attr("opacity", "1");
+    tooltip.attr("display", null);
+  }
+
+  function focusMouseOut() {
+    mouseLine.attr("opacity", "0");
+    tooltip.attr("display", "none");
+    svgElement.selectAll(".tooltip-line-circles").remove();
+  }
+
+
+
+}
+
+
+
+
+
+
+// ---------- Tool Tip ----------- //
+
+
+calltooltip(svgElement,data,xScale,yScale1,yScale,0);
+
+
+
 function updateChart(selectedGroup) {
 console.log(selectedGroup);
     // recompute line chart
@@ -731,6 +960,8 @@ var valueline_vax1 = d3.line()
 var y_l="New Cases per million";
 var yAxis_temp=yAxis;
 var y_val=-48;
+var tot = 0;
+var ysc = yScale;
 
  
 }
@@ -747,6 +978,8 @@ var valueline_vax1 = d3.line()
 var y_l="Total Number of cases";
 var yAxis_temp=yAxis_tot;
 var y_val=-49;
+var tot = 1;
+var ysc = yScale_tot;
 }
   
 
@@ -780,15 +1013,21 @@ svgElement.append("path")
 .attr("clip-path", "url(#clip)");
 
 clipRect.transition()
-  .duration(2700)
+  .duration(4000)
   .ease(d3.easeLinear)
   .attr("width", 700);
 
-setTimeout(function() { mkannot1(svgElement); }, 50);
-setTimeout(function() { mkannot2(svgElement); }, 300);
-setTimeout(function() { mkannot3(svgElement); }, 1000);
-setTimeout(function() { mkannot4(svgElement); }, 1600);
-setTimeout(function() { mkannot5(svgElement); }, 2400);
+setTimeout(function() { mkannot1(svgElement); }, 100);
+setTimeout(function() { mkannot2(svgElement); }, 900);
+setTimeout(function() { mkannot3(svgElement); }, 2000);
+setTimeout(function() { mkannot4(svgElement); }, 2900);
+setTimeout(function() { mkannot5(svgElement); }, 3700);
+
+
+calltooltip(svgElement,data,xScale,yScale1,ysc,tot);
+
+
+
 //Add X Axis
 svgElement.append("g")
 .attr("transform", "translate(0,"+height+")")
