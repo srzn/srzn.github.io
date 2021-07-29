@@ -72,12 +72,18 @@ shape-rendering: crispEdges;
   
   <svg width="650" height="100" id="my_dataviz_dummy"></svg>
 </div>
-<select id="selectButton"></select>
+<div style="width:1440px">
+  <svg width="450" height="20" id="sppage" ></svg>
+  
+  <select width="650" height="20" id="selectButton"></select>
+</div>
+
 <div style="width:1440px">
   <svg width="250" height="500" id="sp_page" ></svg>
   <svg width="100" height="500" id="sp_spake" ></svg>
   <svg width="750" height="500" id="my_dataviz"></svg>
 </div>
+
 <script>
 
 // Pages 
@@ -113,18 +119,18 @@ holder.append("text")
     .attr("dy", ".35em")
     .attr("text-anchor", "middle")
     .style("pointer-events", "none")
-    .text("The chart on the right shows new covid-19 cases")
+    .text("Moving to hospitalization trends due to covid-19,")
 
 holder.append("text")
     .attr("x", 30)
     .attr("y", 63)
     .style("fill", "black")
     .style("font-size", "12px")
-    .attr("dx","8.4em")
+    .attr("dx","8em")
     .attr("dy", ".35em")
     .attr("text-anchor", "middle")
     .style("pointer-events", "none")
-    .text("recorded per day interspersed with cumulative")
+    .text("the general trend bucked downward but there")
 
 
 holder.append("text")
@@ -132,22 +138,22 @@ holder.append("text")
     .attr("y", 76)
     .style("fill", "black")
     .style("font-size", "12px")
-    .attr("dx","8.9em")
+    .attr("dx","8.6em")
     .attr("dy", ".35em")
     .attr("text-anchor", "middle")
     .style("pointer-events", "none")
-    .text("vaccination rate. A rough correlation can be seen")
+    .text("were a few spikes which can be understood from")
 
 holder.append("text")
     .attr("x", 30)
     .attr("y", 89)
     .style("fill", "black")
     .style("font-size", "12px")
-    .attr("dx","5.6em")
+    .attr("dx","8.3em")
     .attr("dy", ".35em")
     .attr("text-anchor", "middle")
     .style("pointer-events", "none")
-    .text("between the displayed line graphs")
+    .text("studying variant information, world events etc.")
      
 // 
 
@@ -230,32 +236,6 @@ holder.append("text")
 
 
 
-
-// Page 4 
-
-
-holder.append("a")
-    .attr("xlink:href", "https://srzn.github.io/DataViz/interact-new%20hosp.html")
-    .append("rect")  
-    .attr("x", 135)
-    .attr("y", 0)
-    .attr("height", 20)
-    .attr("width", 20)
-    .attr("rx",4)
-    .attr("ry",4)
-    .style("fill", "lightgrey")
-    ;
-
-// draw text on the screen
-holder.append("text")
-    .attr("x", 145)
-    .attr("y", 10)
-    .style("fill", "black")
-    .style("font-size", "10px")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "middle")
-    .style("pointer-events", "none")
-    .text(word4);
 
 
 
@@ -344,8 +324,8 @@ function mkannot2(svgElement){
 const annotationsRight2 = [
   {
     note: {
-      label: "US surpasses 25 million cases",
-      title: "January 22, 2021"
+      label: "Christmas - Officials worry elderly people will be at risk after",
+      title: "December 25, 2021"
     },
     connector: {
       end: "arrow",        // none, or arrow or dot
@@ -354,10 +334,10 @@ const annotationsRight2 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 50,
+    x: 20,
     y: 430,
-    dy: -100,
-    dx: 30
+    dy: -200,
+    dx: 20
   }
 ];
 
@@ -377,7 +357,55 @@ svgElement.selectAll(".connector-end")
 
 // ------ Annotations 2 -------- //
 
+
 }
+
+
+function mkannot2a(svgElement){
+
+// ------ Annotations 2a --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight2a = [
+  {
+    note: {
+      label: "Top CDC official predicts B.1.1.7 (Alpha) variant will be dominant by end of March",
+      title: "March 30, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 294,
+    y: 430,
+    dy: -120,
+    dx: -30
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight2a = d3.annotation().annotations(annotationsRight2a);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight2a);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 2a -------- //
+}
+
+
+
 function mkannot3(svgElement){
 
 // ------ Annotations 3 --------- //
@@ -397,10 +425,10 @@ const annotationsRight3 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 268,
+    x: 332,
     y: 430,
     dy: -200,
-    dx: -5
+    dx: -20
   }
 ];
 
@@ -442,7 +470,7 @@ const annotationsRight4 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 353,
+    x: 403,
     y: 430,
     dy: -150,
     dx: 10
@@ -487,7 +515,7 @@ const annotationsRight5 = [
       lineType : "horizontal"
     },
     color: ["grey"],
-    x: 553,
+    x: 607,
     y: 430,
     dy: -270,
     dx: -5
@@ -667,10 +695,11 @@ clipRect.transition()
   .attr("width", 700);
 
 setTimeout(function() { mkannot1(svgElement); }, 50);
-setTimeout(function() { mkannot2(svgElement); }, 300);
-setTimeout(function() { mkannot3(svgElement); }, 1000);
-setTimeout(function() { mkannot4(svgElement); }, 1600);
-setTimeout(function() { mkannot5(svgElement); }, 2400);
+setTimeout(function() { mkannot2(svgElement); }, 200);
+setTimeout(function() { mkannot2a(svgElement); }, 1800);
+setTimeout(function() { mkannot3(svgElement); }, 2000);
+setTimeout(function() { mkannot4(svgElement); }, 2700);
+setTimeout(function() { mkannot5(svgElement); }, 3600);
 
 
 //svgElement.append("path")
@@ -1045,10 +1074,11 @@ clipRect.transition()
   .attr("width", 700);
 
 setTimeout(function() { mkannot1(svgElement); }, 50);
-setTimeout(function() { mkannot2(svgElement); }, 300);
-setTimeout(function() { mkannot3(svgElement); }, 1000);
-setTimeout(function() { mkannot4(svgElement); }, 1600);
-setTimeout(function() { mkannot5(svgElement); }, 2400);
+setTimeout(function() { mkannot2(svgElement); }, 200);
+setTimeout(function() { mkannot2a(svgElement); }, 1800);
+setTimeout(function() { mkannot3(svgElement); }, 2000);
+setTimeout(function() { mkannot4(svgElement); }, 2700);
+setTimeout(function() { mkannot5(svgElement); }, 3600);
 
 
 calltooltip(svgElement,data,xScale,yScale1,ysc,tot);

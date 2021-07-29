@@ -1,0 +1,418 @@
+
+\documentclass[10pt]{article}
+\usepackage{geometry}
+\geometry{a4paper, portrait, margin=0.75in, top=0.75in}
+\usepackage{epsfig} %% for loading postscript figures
+%\usepackage[
+%backend=biber,
+%style=alphabetic,
+%citestyle=authoryear
+%]{biblatex}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array,booktabs,arydshln,xcolor}
+\usepackage{tikz}
+\usepackage{array}
+\renewcommand{\arraystretch}{1.1}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows}
+\usetikzlibrary{calc}
+
+\usepackage{pdflscape}
+\newcommand\VRule[1][\arrayrulewidth]{\vrule width #1}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=R,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+%\usetikzlibrary{er,positioning}
+
+
+\makeatletter
+\pgfarrowsdeclare{crow's foot}{crow's foot}
+{
+    \pgfarrowsleftextend{+-.5\pgflinewidth}%
+    \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+    \pgfutil@tempdima=0.6pt%
+    \pgfsetdash{}{+0pt}%
+    \pgfsetmiterjoin%
+    \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+    \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+    \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{-8pt}{-6pt}}% 
+    \pgfpathlineto{\pgfqpoint{-8pt}{-6pt}}%  
+    \pgfpathlineto{\pgfqpoint{-8pt}{6pt}}% 
+    \pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{omany}{omany}
+{
+    \pgfarrowsleftextend{+-.5\pgflinewidth}%
+    \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+    \pgfutil@tempdima=0.6pt%
+    \pgfsetdash{}{+0pt}%
+    \pgfsetmiterjoin%
+    \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+    \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+    \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%  
+    \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+    \pgfusepathqstroke%
+    \pgfsetfillcolor{white}
+    \pgfpathcircle{\pgfpoint{-11.5pt}{0}} {3.5pt}
+    \pgfusepathqfillstroke%
+}
+
+\pgfarrowsdeclare{one}{one}
+{
+    \pgfarrowsleftextend{+-.5\pgflinewidth}%
+    \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+    \pgfutil@tempdima=0.6pt%
+    \pgfsetdash{}{+0pt}%
+    \pgfsetmiterjoin%
+    \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+    \pgfpathlineto{\pgfqpoint{-6pt}{-6pt}}%  
+    \pgfpathlineto{\pgfqpoint{-6pt}{6pt}}% 
+    \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{-8pt}{-6pt}}% 
+    \pgfpathlineto{\pgfqpoint{-8pt}{-6pt}}%  
+    \pgfpathlineto{\pgfqpoint{-8pt}{6pt}}%    
+    \pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{oone}{oone}
+{
+    \pgfarrowsleftextend{+-.5\pgflinewidth}%
+    \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+    \pgfutil@tempdima=0.6pt%
+    %\advance\pgfutil@tempdima by.25\pgflinewidth%
+    \pgfsetdash{}{+0pt}%
+    \pgfsetmiterjoin%
+     \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+    \pgfpathmoveto{\pgfqpoint{-4pt}{-6pt}}% 
+    \pgfpathlineto{\pgfqpoint{-4pt}{-6pt}}%  
+    \pgfpathlineto{\pgfqpoint{-4pt}{6pt}}% 
+    \pgfsetfillcolor{white}
+    \pgfpathcircle{\pgfpoint{-11.5pt}{0}} {3.5pt}
+    \pgfusepathqfillstroke%
+}
+\makeatother
+
+\tikzset{%
+    mylabel/.style={font=\footnotesize},
+    pics/entity/.style n args={3}{code={%
+        \node[draw,
+        rectangle split,
+        rectangle split parts=2,
+        text height=1.5ex,
+        text width=8.5em,
+        text centered
+        ] (#1)
+        {#2 \nodepart[font=\scriptsize]{second}
+            \begin{tabular}{>{\raggedright\arraybackslash}p{9em}}
+                #3
+            \end{tabular}
+        };%
+    }},
+    pics/entitynoatt/.style n args={2}{code={%
+        \node[draw,
+        text height=1.5ex,
+        text width=8.5em,
+        text centered
+        ] (#1)
+        {#2};%
+    }},
+    zig zag to/.style={
+        to path={(\tikztostart) -| ($(\tikztostart)!#1!(\tikztotarget)$) |- (\tikztotarget)}
+    },
+    zig zag to/.default=0.5,   
+    one to one/.style={
+        one-one, zig zag to
+    },
+    one to oone/.style={% One to Optional-one
+        one-oone, zig zag to
+    },
+    oone to none/.style={% Optional-one to none
+        oone-, zig zag to
+    },
+    oone to oone/.style={% Optional one to Optional-one
+        oone-oone, zig zag to
+    },
+    one to many/.style={
+        one-crow's foot, zig zag to,
+    },
+    one to omany/.style={
+        one-omany, zig zag to
+    },
+    one to none/.style={
+        one-, zig zag to
+    },    
+}
+
+
+
+\begin{document}
+
+\begin{titlepage}
+   \begin{center}
+       \vspace*{1cm}
+
+       {\Huge Data Cleaning Project - Phase I}
+            
+       \vspace*{0.5cm}
+       
+       {\Large CS513 - Theory and Practice of Data Cleaning}
+       
+       \vspace*{3.5cm}
+       
+       {\Large Report}
+       
+       \vspace*{0.25cm}
+       
+       {\large by}
+       
+       \vspace*{1cm}
+       
+       \textbf{\huge Sai Srujan Gudibandi}
+
+       \vspace{0.5cm}
+            
+       {\Large ssg7@illinois.edu}
+            
+       \vfill
+     
+       {\large July 10, 2021\\07/10/2021\\10/07/2021\\2021/07/10\\ 2021-07-10 23:59:00 CDT\\ 2021-07-11 04:59:00 UTC}
+            
+   \end{center}
+\end{titlepage}
+
+
+\section{Introduction } \label{intro}
+For almost every single data analysis project, the obtained data should pass through rigorous cleaning phases before a comprehensive picture is formed. Some datasets appear to produce good answers to our questions / use cases even before any cleaning steps. Without a proper analysis of a dataset and a few rudimentary cleaning steps, however, the results obtained should be considered unreliable.  A curious case of various date formats is depicted in my cover page to draw attention to possible inconsistencies in using a date format across the world. Here, I outline my first phase of the larger data cleaning project. After a detailed dataset description, I'll formulate some uses cases and corner cases which will be followed by 5-step plan of how the project will be implemented. I'll use the same notation as used in the project instructions document (the same can be found in Appendix).
+ 
+\section{Dataset} \label{dat}
+The dataset, $D$, I chose for the project is the USDA Farmers' Markets dataset \cite{usda}. On a higher level, this dataset has a list of farmers' markets across 50 US states and 3 US regions (DC, Puerto Rico and Virgin Islands). Although the entire dataset can be downloaded as a single table, I created an entity-relationship model in \ref{fig:M1}. I'll now explain the dataset and with that the ER diagram briefly. I have divided the data into the following five entities:
+\subsection {Farmers' Market}
+The core entity of the dataset that describes a farmers' market and that has attributes like FMID (a unique id per market), Name, Address details (city, county, state, zip, geographic locale, and indoor/outdoor description). The diagram also depicts the type of each attribute assigned to the entity. All the other entities that will be described below have a many-to-many relationship with this entity meaning each entry of this entity may have values associated with multiple attributes of other entities.
+\subsection{Social Media/Internet Presence}
+This entity is mainly concerned with the online presence of each of the farmers' markets. Attributes include weblinks/Group names associated with a website, Facebook, Twitter, Youtube and other social media sites.
+\subsection{Season/Time}
+This entity describes the seasonal presence of a farmers' market and also lists their weekly hours too. Four date ranges corresponding to the four seasons that are experienced in the US as well as the weekly time ranges are the attributes for this entity. The ``updateTime" attribute describes the last time information about a particular farmers' market is updated.
+\subsection {Payment Instrument}
+This entity lists the methods of payments that are accepted at a farmers' market. Credit card, Women,Infants and Children (WIC, WICcash) \cite{wic}, SNAP/EBT, Seniors Farmers' Market Nutrition Program (SFMNP) \cite{sfmnp} are the attributes for this entity and their values take either `Y' or `N' (Boolean value)
+\subsection{Produce Type}
+Perhaps the entity of most interest for people perusing farmers' market data is the ``Produce Type". This describes the availability of different kinds of produce/food that are sold at each farmers' market. Example attributes include Vegetables, Meat, Eggs, Jam, Coffee etc. They also take the value of `Y' or `N' indicating whether they are available at one location.      
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\begin{figure}
+    \centering
+        \begin{tikzpicture}
+            \pic {entity={A}{Social Media}{%
+                Website - String \\	
+                Facebook - String \\	
+                Twitter - String \\	
+                Youtube - String \\	
+                OtherMedia - String
+            }};
+            \pic[right=7em of A] {entity={AB}{{Farmers' Market}}{%
+                FMID - int \\
+                MarketName - String \\
+                street - String \\	
+                city - String \\	
+                County - String \\	
+                State	- String \\
+                zip - String \\
+                Location - String \\
+                x (latitude) - Float \\
+                y (longitude) - Float \\
+            }};
+            \pic[right=7em of AB] {entity={B}{Season / Time}{%
+                Season1Date - Date Range \\
+                Season2Date - Date Range \\
+                Season3Date - Date Range \\
+                Season4Date - Date Range \\
+                Season1Time - Time Range \\
+                Season2Time - Time Range \\
+                Season3Time - Time Range \\
+                Season4Time - Time Range \\
+                updateTime - Date
+            }};
+            \pic[below=16ex of A] {entity={C}{Payment Instrument}{%
+                Credit - Bool \\
+                WIC - Bool \\
+                WICcash - Bool \\	
+                SFMNP - Bool \\	
+                SNAP - Bool    
+            }};
+            
+            \pic[below=16ex of B] {entity={D}{Produce Type}{%
+                Organic - Bool \\
+                Bakedgoods - Bool \\	
+                Cheese - Bool \\ 	
+                Crafts - Bool \\	
+                Flowers - Bool \\ 	
+                Eggs	- Bool \\ 
+                Seafood - Bool \\	
+                Herbs - Bool \\	
+                Vegetables - Bool \\	
+                Honey - Bool \\	
+                Jams - Bool \\ 
+                Maple - Bool \\	
+                Meat - Bool \\	
+                Nursery - Bool \\	 
+                Nuts - Bool \\	
+                Plants - Bool \\	
+                Poultry - Bool \\	
+                Prepared - Bool \\	
+                Soap - Bool \\	
+                Trees - Bool \\	
+                Wine - Bool \\	
+                Coffee - Bool \\	
+                Beans - Bool \\	
+                Fruits - Bool \\	
+                Grains - Bool \\	
+                Juices - Bool \\	
+                Mushrooms - Bool \\	
+                PetFood - Bool \\	
+                Tofu - Bool \\	
+                WildHarvested - Bool    
+            }};
+            
+            \draw[one to omany] (A.east) -- (AB.west);
+            %\node[mylabel, anchor=south east] at (A.north east) {is in};
+            \draw[one to omany] (B.west) -- (AB.east);
+            %\node[mylabel, anchor=south west] at (B.north west) {is in};
+            \draw[one to omany] (C.north) -- (AB.south west);
+            \draw[one to omany] (D.north) -- (AB.south east);
+            %\node[mylabel, anchor=south west] at (B.south east) {is in};
+            %\node[mylabel, anchor=north west] at (C.north east) {is in};
+            %From section 13.3 of the TikZ manual, (2,1 |- 3,4) and (3,4 -| 2,1) both yield the same as (2,4) 
+            %\coordinate (mymiddle) at ($(C.west)!.5!(C1.east)$);
+            %\coordinate (mylink) at (C.west -| mymiddle);
+            %\draw[one to oone] (C.west) -| (mymiddle) node[mylabel, above=10pt]{is in} |- (C1.east);  % Make "oone" rel
+            %\draw[oone to none] (C2.east) -|  node[mylabel, below=2pt]{is in} (mylink);
+            \end{tikzpicture}
+    
+    \caption{ER Diagram for Dataset D} \label{fig:M1}
+\end{figure}
+
+\section{Usecases} \label{usec}
+Here I propose these usecases:
+\subsection{Main Usecase - $U_1$}
+The main usecase I propose is of a web application that can be developed from a cleaned dataset ($D'$). Using the web application, several queries that are directed at the application can be answered. Following queries are a few examples:
+\\ \\
+$Q^{1}_{U_1}$ - Given a Zip code by the user, depending on the date and time of the inquiry, list all farmers' markets within a 5 mile radius of the Zip code that sell organic produce  \\ \\
+$Q^{2}_{U_1}$ - Given a city name, list all the famers' markets in the city that sell coffee in December  \\ \\
+$Q^{3}_{U_1}$ - List all the unique farmers' markets in any given state \\ \\
+ 
+  
+
+  
+\subsection{Corner Usecase - $U_0$}
+A corner case/query which doesn't require any data cleaning is as follows - `` Is there any state/region where none of the farmers' markets don't accept credit as payment ? " ``Credit" column has no null/empty values and only have `Y' and `N' as possible values. Also, all states and regions from ``state" column are standardized and require no cleaning. Because of this, $U_0$ can be answered with just dataset $D$. 
+\subsection{Corner Usecase - $U_2$}
+Even after cleaning the seasonDate and seasonTime columns, the following usecase ($Q^{1}_{U_2}$) - `` What farmers' markets in New York City are open on Christmas Eve?" cannot be answered. This isn't a trivial usecase that is constructed just to negate the usability of $D'$. Upon an initial review of the dataset, it appears as though date and time when farmers' market operate are readily available. But the significance of Christmas Eve isn't tagged by any attribute of the dataset and hence cleaning doesn't result in improving the chances of getting an answer. Another corner question/usecase ($Q^{2}_{U_2}$) would be ``How many farmers' markets sell \textit{Organic only} produce ?". Despite cleaning the data to produce only unique farmers' markets list, this question can't be answered by $D'$. The only answer $D'$ can give is the number of farmers' markets that sell at least one Organic produce item and cannot guarantee organic-only attribute.
+   
+\section{Data Quality Problems} \label{dq}
+Following are the data quality problems I noted upon a cursory review of the dataset:
+
+\begin{itemize}
+  \item `FMID' attribute should have unique entries but it doesn't (Ex:1018318)
+  \item `MarketName' field has improper capitalization/extraneous punctuation of the values 
+  \item `city' attribute has blank fields (Ex:`-')
+  \item `city' attribute has an incorrect entry (Ex:`296 Flower city park')
+  \item `city' attribute has inconsistent formatting (attached state )
+  \item `city' attribute field has improper capitalization/extraneous punctuation of the values
+  \item `zip' attribute has variable number of digits (Ex:5828). Should be 5 digits \cite{zip} for a web application usability
+  \item `Season1Date' attribute has inconsistent date range formatting (Ex: July to November, 06/29/2017 to 09/10/2017). Same can be applied to `Season2Date', `Season3Date' and `Season4Date' 
+  \item `updateTime' attribute has inconsistent date formatting (Ex: 6/20/17 22:43 , 2013)
+\end{itemize} 
+
+\section{Tentative Project Plan} \label{tpp}
+Following are the steps I tentatively plan on following for the completion of my project:
+\begin{itemize}
+  \item $S_1$: Please refer to Sec. \ref{dat} and Sec. \ref{usec}
+  \item $S_2$: From Sec. \ref{dq}, we need to standardize Zip codes to accurately answer $Q^{1}_{U_1}$ from Sec. \ref{usec}. To answer  $Q^{2}_{U_1}$, we need to clean and standardize all the SeasonDate and SeasonTime attributes. We also need to remove duplicate farmers' market entries to answer $Q^{2}_{U_1}$ and/or $Q^{3}_{U_1}$.
+  \item $S_3$: I plan on using OpenRefine to identify all clusters of cities, counties and zip code attributes. I also plan on using Python to filter/correct city values that have attached state symbols to them. 
+  \item $S_4$: To check logical consistency and integrity constraints, I plan on using Datalog etc. Some of the constraints I'll check are - Ensuring no date range overlaps between Season1Date, Season2Date,Season3Date, and Season4Date.; Farmers' markets that have the attribute ``Baked goods" value `Y' should also have `Y' for the attribute ``Prepared foods"; Zip codes available in the fields should, in real life, be available in the states they're mapped to.
+ 
+  \item $S_5$: Documenting all the changes for the transformation of dataset $D$ to $D'$ could be tracked in multiple ways. One of it is to use Openrefine's list of actions. If more than one tools is used, I plan on using other project management tools like yesWorkflow to record and document the changes. 
+\end{itemize}
+\section{Conclusion}
+This is an early revision of the project plan. I might switch/change the kind of tools/software that I use to achieve cleaning for a successful usecase outcome. 
+\appendix
+\section{Glossary}
+
+
+\begin{tabular}{ l l }
+ $D$ & Original Dataset  \\ 
+ $D'$ & Cleaned Dataset  \\
+ $Q^{i}_{U_j}$ & $i^{th}$ query of $j^{th}$ usecase \\
+ $U_0$ & Usecase that doesn't require any cleaning  \\
+ $U_1$ & Usecase that needs $D'$ to obtain an accurate answer \\
+ $U_2$ & Usecase where even $D'$ is insufficient for an accurate answer 
+\end{tabular}
+
+\begin{thebibliography}{10}
+
+\bibitem{usda}
+National Farmers Market Directory. 
+https://www.ams.usda.gov/local-food-directories/farmersmarkets
+
+\bibitem{zip}
+ZIP Code\texttrademark - The Basics. 
+https://faq.usps.com/s/article/ZIP-Code-The-Basics
+
+\bibitem{wic}
+The Special Supplemental Nutrition Program for Women, Infants and Children (WIC).
+https://www.nwica.org/wic-basics
+
+\bibitem{sfmnp}
+Seniors Farmers' Market Nutrition Program.
+https://www.fns.usda.gov/sfmnp/senior-farmers-market-nutrition-program
+
+
+\end{thebibliography}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
