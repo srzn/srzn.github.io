@@ -378,6 +378,56 @@ svgElement.selectAll(".connector-end")
 // ------ Annotations 2 -------- //
 
 }
+
+
+
+
+function mkannot2a(svgElement){
+// ------ Annotations 2a --------- //
+
+
+// ==== RIGHT ====== //
+const annotationsRight2a = [
+  {
+    note: {
+      label: "States began lifting restrictions",
+      title: "March 15, 2021"
+    },
+    connector: {
+      end: "arrow",        // none, or arrow or dot
+      type: "curve",       // Line or curve
+      points: 2,           // Number of break in the curve
+      lineType : "horizontal"
+    },
+    color: ["grey"],
+    x: 256,
+    y: 430,
+    dy: -70,
+    dx: -50
+  }
+];
+
+// Add annotation to the chart
+const makeAnnotationsRight2a = d3.annotation().annotations(annotationsRight2a);
+svgElement
+  .append("g")
+  .call(makeAnnotationsRight2a);
+
+svgElement.selectAll(".connector")
+  .attr('stroke', "blue")
+  .style("stroke-dashArray", ("3, 3"))
+svgElement.selectAll(".connector-end")
+  .attr('stroke', "blue")
+  .attr('fill', "blue")
+
+
+// ------ Annotations 2a -------- //
+}
+
+
+
+
+
 function mkannot3(svgElement){
 
 // ------ Annotations 3 --------- //
@@ -477,7 +527,7 @@ function mkannot5(svgElement){
 const annotationsRight5 = [
   {
     note: {
-      label: "An estimated 83% of All new cases are of Delta variant",
+      label: "An estimated 83% of all new cases are of Delta variant",
       title: "July 20, 2021"
     },
     connector: {
@@ -668,11 +718,28 @@ clipRect.transition()
   .ease(d3.easeLinear)
   .attr("width", 700);
 
+mkannot(0);
+
+function mkannot(var_ant){
+if(var_ant==0){
+setTimeout(function() { mkannot1(svgElement); }, 100);
+setTimeout(function() { mkannot2a(svgElement); }, 1400);
+setTimeout(function() { mkannot3(svgElement); }, 2000);
+setTimeout(function() { mkannot4(svgElement); }, 2900);
+setTimeout(function() { mkannot5(svgElement); }, 3700);
+}
+else{
+
 setTimeout(function() { mkannot1(svgElement); }, 100);
 setTimeout(function() { mkannot2(svgElement); }, 900);
 setTimeout(function() { mkannot3(svgElement); }, 2000);
 setTimeout(function() { mkannot4(svgElement); }, 2900);
 setTimeout(function() { mkannot5(svgElement); }, 3700);
+
+}
+
+} 
+
 
 
 //svgElement.append("path")
@@ -962,7 +1029,7 @@ var yAxis_temp=yAxis;
 var y_val=-48;
 var tot = 0;
 var ysc = yScale;
-
+var var_ant=0;
  
 }
 else{
@@ -980,6 +1047,7 @@ var yAxis_temp=yAxis_tot;
 var y_val=-49;
 var tot = 1;
 var ysc = yScale_tot;
+var var_ant=1;
 }
   
 
@@ -1017,11 +1085,7 @@ clipRect.transition()
   .ease(d3.easeLinear)
   .attr("width", 700);
 
-setTimeout(function() { mkannot1(svgElement); }, 100);
-setTimeout(function() { mkannot2(svgElement); }, 900);
-setTimeout(function() { mkannot3(svgElement); }, 2000);
-setTimeout(function() { mkannot4(svgElement); }, 2900);
-setTimeout(function() { mkannot5(svgElement); }, 3700);
+mkannot(var_ant);
 
 
 calltooltip(svgElement,data,xScale,yScale1,ysc,tot);
